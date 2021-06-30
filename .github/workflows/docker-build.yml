@@ -30,8 +30,8 @@ jobs:
     - name: Build and Push
       uses: docker/build-push-action@v2
       with:
-        context: ./exercises
-        file: ./Dockerfile
+        context: .
+        file: ./exercises/python-helloworld/Dockerfile
         platforms: linux/amd64
         push: true
         tags: andremagalhaes/python-helloworld:latest
