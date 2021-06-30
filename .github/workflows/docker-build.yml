@@ -30,7 +30,7 @@ jobs:
     - name: Build and Push
       uses: docker/build-push-action@v2
       with:
-        context: .
+        context: ./exercises
         file: ./Dockerfile
         platforms: linux/amd64
         push: true
