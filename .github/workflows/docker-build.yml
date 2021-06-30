@@ -4,9 +4,9 @@ name: Docker Build and Push
 ## Set the trigger policy.
 on:
   push:
-    branches: [master]
+    branches: [main]
   pull_request:
-    branches: [master]
+    branches: [main]
 
 ## List the steps to be executed by the workflow
 jobs:
