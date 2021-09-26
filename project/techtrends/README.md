@@ -15,7 +15,7 @@ To run this application there are 2 steps required:
 # Create virtual environment
 python3 -m venv .venv
 
-# Activate virtual environment
+# Activate virtual environment (always run this when openning a new terminal)
 cd .venv
 source bin/activate
 
