@@ -40,3 +40,14 @@ FLASK_APP=app.py FLASK_ENV=development flask run
 # Go to http://127.0.0.1:5000/
 ```
 
+## Github Action
+
+Pushing a change to this repo causes the docker image to be rebuilt and pushed to Docker Hub as defined in the github action located at `./github/workflows/techtrends-dockerhub.yml`. 
+
+Note that we are making use of Docker Meta plugin with basic configuration to automatically generate image tags on Docker Hub. With the current setup pushes to the main branch only update the main tag. To generate version tags and update latest tag you need to push a new version tag to github:
+
+```
+# Example only. Update the version with a new version for every change:
+git tag -a v0.0.2 -m "version 0.0.2"
+git push origin v0.0.2
+```
