@@ -1,4 +1,5 @@
 import sys
+import os
 import sqlite3
 
 from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
@@ -6,6 +7,26 @@ from werkzeug.exceptions import abort
 import logging
 
 connection_count = 0
+db = 'database.db'
+
+
+# Check if database is operational.
+def check_db():
+    if os.path.isfile(db):
+        connection = sqlite3.connect(db)
+        connection.row_factory = sqlite3.Row
+        table = connection.execute(
+            'SELECT name FROM sqlite_master WHERE type = "table" AND name = "posts"').fetchone()
+        connection.close
+
+        if table is None:
+            app.logger.error('Posts table does not exist')
+            return False
+        else:
+            return True
+    else:
+        app.logger.error('Database file "{}" does not exist!'.format(db))
+        return False
 
 
 # Function to get a database connection.
@@ -13,7 +34,7 @@ connection_count = 0
 def get_db_connection():
     global connection_count
 
-    connection = sqlite3.connect('database.db')
+    connection = sqlite3.connect(db)
     connection.row_factory = sqlite3.Row
 
     connection_count += 1
@@ -98,11 +119,18 @@ def create():
 # Define the health monitor endpoint
 @app.route("/healthz")
 def healthz():
-    response = app.response_class(
-        response=json.dumps({"result": "OK - healthy"}),
-        status=200,
-        mimetype='application/json'
-    )
+    if check_db():
+        response = app.response_class(
+            response=json.dumps({"result": "OK - healthy"}),
+            status=200,
+            mimetype='application/json'
+        )
+    else:
+        response = app.response_class(
+            response=json.dumps({"result": "ERROR - unhealthy"}),
+            status=500,
+            mimetype='application/json'
+        )
 
     return response
 
