@@ -1,7 +1,7 @@
 FROM python:2.7
 LABEL maintainer="Andre Magalhaes"
 
-COPY . /app
+COPY ./techtrends /app
 
 WORKDIR /app
 
