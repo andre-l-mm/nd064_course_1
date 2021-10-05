@@ -2,7 +2,8 @@ import sys
 import os
 import sqlite3
 
-from flask import Flask, jsonify, json, render_template, request, url_for, redirect, flash
+from flask import (Flask, jsonify, json, render_template, request, url_for,
+                   redirect, flash)
 from werkzeug.exceptions import abort
 import logging
 
@@ -15,8 +16,10 @@ def check_db():
     if os.path.isfile(db):
         connection = sqlite3.connect(db)
         connection.row_factory = sqlite3.Row
-        table = connection.execute(
-            'SELECT name FROM sqlite_master WHERE type = "table" AND name = "posts"').fetchone()
+        query = 'SELECT name FROM sqlite_master '\
+            'WHERE type = "table" '\
+            'AND name = "posts"'
+        table = connection.execute(query).fetchone()
         connection.close
 
         if table is None:
@@ -105,8 +108,9 @@ def create():
             flash('Title is required!')
         else:
             connection = get_db_connection()
-            connection.execute('INSERT INTO posts (title, content) VALUES (?, ?)',
-                               (title, content))
+            insert = 'INSERT INTO posts (title, content) '\
+                     'VALUES (?, ?)'
+            connection.execute(insert, (title, content))
             connection.commit()
             connection.close()
             app.logger.debug('Article titled "{}" created!'.format(title))
@@ -151,8 +155,10 @@ def metrics():
 
 
 # Configure default logging to log to both stdout and stderror as requested.
-# This will duplicate all log lines on the terminal but it is what is being asked in the assignement.
-# The format used is the same as logging.BASIC_FORMAT with the addition of a timestamp between brackets.
+# This will duplicate all log lines on the terminal but it is what is being
+# asked in the assignement.
+# The format used is the same as logging.BASIC_FORMAT with the addition of a
+# timestamp between brackets.
 def configure_log():
     format = '%(levelname)s:%(name)s:[%(asctime)s]:%(message)s'
     level = logging.DEBUG
@@ -161,7 +167,8 @@ def configure_log():
     logging.basicConfig(level=level, handlers=handlers)
 
 
-# Creates a new stream logging handler with the provided stream, format and logging level.
+# Creates a new stream logging handler with the provided stream, format and
+# logging level.
 def get_handler(stream, format, level):
     handler = logging.StreamHandler(stream)
     handler.setLevel(level)
@@ -171,7 +178,7 @@ def get_handler(stream, format, level):
     return handler
 
 
-# configure log outputing to both stdout and stderr as requested - This generates duplicated logs on terminal
+# configure log outputing to both stdout and stderr as requested
 configure_log()
 
 # start the application on port 3111
